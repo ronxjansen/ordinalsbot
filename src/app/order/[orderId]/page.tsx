@@ -1,6 +1,4 @@
-// 88c33f7b-644c-473b-acf7-7eb37ea74213
-
-export enum ORDER_STATE {
+enum ORDER_STATE {
     WAITING_PAYMENT = 'waiting-payment',
     WAITING_CONFIRMATION = 'waiting-confirmation',
     WAITING_PARENT = 'waiting-parent',

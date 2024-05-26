@@ -9,6 +9,11 @@ const fetchBTCInfo = async () => {
     .orderBy("height", "desc")
     .limit(1)
     .get();
+
+  if (btc.empty) {
+    return null
+  }
+
   return btc.docs[0].data();
 };
 
@@ -18,38 +23,40 @@ const getCachedBTCInfo = cache(fetchBTCInfo, ["fetchBTCInfo"], {
 
 export default async function Home() {
   const data = await getCachedBTCInfo();
-  const { price, time, txsAmount, size, height } = data;
   return (
     <>
       <div className="text-lg opacity-50 mt-12 uppercase">
         Latests Bitcoin block info
       </div>
-      <div className="grid grid-cols-5 gap-4 my-8">
+      
+      {data ? (<div className="grid grid-cols-5 gap-4 my-8">
         <div className="flex flex-col  space-y-2">
           <div>Minted</div>
           <div className="text-xl font-semibold">
-            {formatDistanceToNow(new Date(time._seconds * 1000), {
+            {formatDistanceToNow(new Date(data.time._seconds * 1000), {
               addSuffix: true,
             })}
           </div>
         </div>
         <div className="flex flex-col  space-y-2">
           <div>Price in $</div>
-          <div className="text-xl font-semibold">{price.USD["15m"]}</div>
+          <div className="text-xl font-semibold">{data.price.USD["15m"]}</div>
         </div>
         <div className="flex flex-col  space-y-2">
           <div>Block height</div>
-          <div className="text-xl font-semibold">{height}</div>
+          <div className="text-xl font-semibold">{data.height}</div>
         </div>
         <div>
           <div>Block size</div>
-          <div className="text-xl font-semibold">{size}</div>
+          <div className="text-xl font-semibold">{data.size}</div>
         </div>
         <div>
           <div>Number of transactions</div>
-          <div className="text-xl font-semibold">{txsAmount}</div>
+          <div className="text-xl font-semibold">{data.txsAmount}</div>
         </div>
-      </div>
+      </div>) : (
+        <div className="text-red-500">No data available</div>
+      )}
     </>
   );
 }

@@ -1,0 +1,8 @@
+{
+	"crons": [
+		{
+			"path": "/api/update-btc-info",
+			"schedule": "*/10 * * * *"
+		}
+	]
+}
